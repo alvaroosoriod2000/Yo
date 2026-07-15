@@ -1,5 +1,6 @@
 import threading
 import asyncio
+import os  # Importamos os para leer variables de entorno
 from flask import Flask, jsonify, render_template_string
 from TikTokLive import TikTokLiveClient
 from TikTokLive.events import ConnectEvent, GiftEvent, DisconnectEvent
@@ -113,9 +114,7 @@ def add_event(message):
 # 4. CONEXIÓN A TIKTOK LIVE
 # ==========================================
 def start_tiktok_client():
-    # USUARIO ACTUALIZADO (Sin el símbolo @)
-    TIKTOK_USERNAME = "firu0123456789"
-
+    TIKTOK_USERNAME = "firu0123456789" # Asegúrate de que este sea el nombre correcto
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     client = TikTokLiveClient(unique_id=TIKTOK_USERNAME)
@@ -158,4 +157,6 @@ def start_tiktok_client():
 if __name__ == '__main__':
     tiktok_thread = threading.Thread(target=start_tiktok_client, daemon=True)
     tiktok_thread.start()
-    app.run(host='0.0.0.0', port=5000)
+    # Definir puerto dinámico para Render
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
